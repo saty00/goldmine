@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "GOLDmine \u2014 UCSB Schedule Helper",
+  "short_name": "GOLDmine",
+  "version": "13.0.0",
+  "description": "prof ratings, conflict warnings, and pass time countdown built into UCSB GOLD. your data stays on your device.",
+  "homepage_url": "https://github.com/satyachindam/goldmine",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://my.sa.ucsb.edu/*",
+    "https://www.ratemyprofessors.com/*"
+  ],
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://my.sa.ucsb.edu/gold/*"
+      ],
+      "js": [
+        "content/content.js"
+      ],
+      "css": [
+        "content/styles.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "data/ratings.json"
+      ],
+      "matches": [
+        "https://my.sa.ucsb.edu/*"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "GOLDmine",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  }
+}

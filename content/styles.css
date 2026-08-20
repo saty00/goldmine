@@ -1,0 +1,472 @@
+/* ============================================================
+   GOLDmine injected styles v9 — 90s camcorder footage
+   Handheld video of the ocean. Washed out, low contrast, nothing saturated.
+   Iridescent smear across the frame from a cheap lens. Nothing razor-sharp.
+
+   If a color pops, it's wrong. Nothing above 60% saturation.
+   Nothing is pure white or pure black, anywhere in this file.
+
+   GOLD's stylesheet is hostile on specificity, so everything is namespaced gm-
+   and the few rules that must win say !important on purpose.
+   ============================================================ */
+/* v13 §1 — ONE typeface. Bricolage Grotesque, weights 400/600/800.
+   The face this replaces was rejected for reading like a default UI sans, and
+   that was fair: it is a well-behaved neutral grotesque, which is exactly the
+   quality this project exists to avoid. Bricolage Grotesque is the opposite
+   proposition — squared bowls, blunt terminals, deliberately uneven widths, a
+   face that looks constructed rather than defaulted to. It carries an optical
+   size axis, so it was drawn to hold together at small sizes, and 200–800 of
+   weight, so hierarchy still comes from weight and never from a second family.
+   Every face this project has shipped before is deleted; the suite greps. */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap');
+
+:root {
+  /* A2 — day: sun-bleached video */
+  --gm-base:    #e8e4da;
+  --gm-surface: #f2eee4;
+  --gm-ink:     #2b3d52;
+  --gm-accent:  #d9b676;
+  --gm-good:    #7fa8a0;
+  --gm-clash:   #c98878;
+  --gm-warn:    #c9a878;
+  --gm-muted:   #8a8578;
+  --gm-fringe-pink: #e4b8c8;
+  --gm-fringe-mint: #b8d8c8;
+
+  /* A15 — warm shadows, never neutral gray */
+  --gm-shadow: rgba(139, 125, 107, 0.2);
+  --gm-hair:   rgba(43, 61, 82, 0.22);
+
+  /* v12 §6 — one face, three weights */
+  --gm-face:  'Bricolage Grotesque', sans-serif;
+  --gm-heavy: 800;   /* headers, day letters, the loudest label on a surface */
+  --gm-mid:   600;   /* codes, scores, anything a student scans down a column */
+  --gm-body:  400;
+}
+
+
+/* Every number GOLDmine draws is tabular so columns hold still while scrolling.
+   v12 §6 — one family means every one of these is now the same face at a
+   different weight, so the figures across a page share one set of advances.
+   Scoped to gm- classes on purpose: a `*` rule here would restyle GOLD itself. */
+.gm-pill, .gm-seat, .gm-card-big, .gm-stat-num, .gm-card-dept, .gm-card-outof,
+.gm-peek-time, .gm-peek-code, .gm-units-num, .gm-tip,
+.gm-final-badge, .gm-waitlist-badge, .gm-prereq-badge, .gm-prereq-list {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ================== A4 — chromatic aberration ==================
+   A cheap lens splits the edges: pink leads on the top-left, mint trails on the
+   bottom-right. Applied to every injected panel and card — the audit caught this
+   sitting in an unused helper class, which meant the injected UI had no fringing
+   at all while the popup did. */
+.gm-card,
+.gm-peek,
+.gm-status {
+  border-top: 1px solid var(--gm-fringe-pink);
+  border-left: 1px solid var(--gm-fringe-pink);
+  border-bottom: 1px solid var(--gm-fringe-mint);
+  border-right: 1px solid var(--gm-fringe-mint);
+}
+
+/* ================== A12 — one button family ==================
+   Squared, beveled, light source always top-left. Three scales, one design. */
+.gm-peek-toggle,
+.gm-peek-compact,
+.gm-status-close {
+  background: var(--gm-surface);
+  color: var(--gm-ink);
+  border-radius: 2px;
+  border-top: 2px solid #f2eee4;
+  border-left: 2px solid #f2eee4;
+  border-bottom: 2px solid #8a9ba8;
+  border-right: 2px solid #8a9ba8;
+  font-family: var(--gm-face);
+  font-weight: var(--gm-mid);
+  cursor: pointer;
+  line-height: 1;
+}
+.gm-peek-toggle:active,
+.gm-peek-compact:active,
+.gm-status-close:active {
+  border-top-color: #8a9ba8;
+  border-left-color: #8a9ba8;
+  border-bottom-color: #f2eee4;
+  border-right-color: #f2eee4;
+  transform: translate(1px, 1px);
+}
+
+/* ================== rating pills — A13 sticker treatment ================== */
+.gm-pill-wrap { position: relative; display: inline-block; margin-left: 7px; vertical-align: middle; }
+.gm-pill-holder { display: inline; }
+
+.gm-pill {
+  display: inline-block;
+  min-width: 30px;
+  padding: 2px 6px 1px;
+  font-family: var(--gm-face);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  cursor: default;
+  border-radius: 2px;
+  /* F4: die-cut sticker ring + warm shadow, but NOT rotated. The ±2° tilt read
+     as a rendering fault rather than a design choice — students saw a broken
+     extension, not a sticker. The visual interest comes from the bevel, the
+     chromatic fringe and the tape texture instead. */
+  box-shadow: 0 0 0 2px #f2eee4, 1px 2px 0 var(--gm-shadow);
+}
+.gm-pill:focus-visible { outline: 2px solid var(--gm-ink); outline-offset: 3px; }
+
+.gm-tier-green   { background: #8fae90; color: #1e2a20; }
+.gm-tier-yellow  { background: #d9c184; color: #3a3020; }
+.gm-tier-red     { background: #c98878; color: #33201c; }
+.gm-tier-none    { background: #b8b3a6; color: #33302a; }
+/* NOT a rating: the lookup failed. Hatched so it can't be misread as a score. */
+.gm-tier-unknown {
+  background: repeating-linear-gradient(45deg, #c4bfb2, #c4bfb2 3px, #b0aa9c 3px, #b0aa9c 6px);
+  color: #33302a;
+}
+/* thin evidence (<3 ratings): hollow, so it reads as provisional */
+.gm-pill-thin { background: var(--gm-surface); }
+.gm-pill-thin.gm-tier-green  { color: #486a52; }
+.gm-pill-thin.gm-tier-yellow { color: #6e5a2c; }
+.gm-pill-thin.gm-tier-red    { color: #8a4a3c; }
+
+/* ================== hover card ================== */
+.gm-card {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 2147483000;
+  width: 234px;
+  display: block;
+  background: var(--gm-surface);
+  border-radius: 3px;
+  box-shadow: 2px 3px 0 var(--gm-shadow);
+  filter: blur(0.3px);              /* A4 — nothing razor-sharp */
+  font-family: var(--gm-face);
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+}
+.gm-pill-wrap:hover .gm-card,
+.gm-pill:focus-visible + .gm-card { opacity: 1; visibility: visible; }
+.gm-card-na { width: 210px; }
+.gm-card-nabody { display: block; padding: 10px 12px; font-size: 11px; line-height: 1.5; color: var(--gm-ink); }
+.gm-card-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  padding: 7px 12px 6px; background: var(--gm-ink);
+}
+.gm-card-name { color: #f2eee4; font-family: var(--gm-face); font-weight: var(--gm-heavy); font-size: 13px; }
+.gm-card-dept { color: var(--gm-accent); font-size: 11px; white-space: nowrap; }
+.gm-card-score { display: flex; align-items: baseline; gap: 7px; padding: 10px 12px 2px; }
+.gm-card-big { font-size: 26px; font-weight: 700; color: var(--gm-ink); line-height: 1; }
+.gm-card-outof { font-size: 11px; color: var(--gm-muted); }
+.gm-card-stats { display: flex; gap: 16px; padding: 7px 12px 10px; }
+.gm-stat { display: flex; flex-direction: column; gap: 1px; }
+.gm-stat-num { font-size: 14px; font-weight: 700; color: var(--gm-ink); }
+.gm-stat-label { font-size: 11px; color: var(--gm-muted); }
+.gm-card-link {
+  display: block; padding: 7px 12px 8px;
+  border-top: 1px solid var(--gm-hair);
+  background: var(--gm-base);
+  font-size: 11px; font-weight: 700; color: var(--gm-ink); text-decoration: none;
+}
+.gm-card-link:hover { color: var(--gm-clash); text-decoration: underline; }
+
+/* ================== A13 — sticker markers ==================
+   One per course block (F2). Die-cut ring, warm shadow, chunky bevel — but
+   upright. See F4: the rotation read as a bug, not a sticker. */
+/* F7: the left stripe is gone. It repeated what the marker already says, and a
+   row carrying a stripe AND a tint AND a marker is three signals for one fact.
+   The tint stays, but only on a row that actually clashes — a tint on a clear
+   row carries no information, so a clean page now shows nothing at all. */
+.gm-conflict-row {
+  background: rgba(201, 136, 120, 0.09) !important;
+}
+
+.gm-cell {
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: right;
+}
+
+/* v13 §0.3 — the last-resort holder, appended to the row itself when no cell
+   qualifies as the actions area. `margin-left: auto` pushes it to the right end
+   of GOLD's flex rows without displacing anything already in them; the float is
+   the fallback for the rows GOLD still lays out as blocks. */
+.gm-row-end {
+  display: inline-block;
+  margin-left: auto;
+  float: right;
+}
+
+.gm-marker {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+  cursor: help;
+  line-height: 1;
+}
+.gm-marker:focus-visible { outline: 2px solid var(--gm-ink); outline-offset: 3px; }
+
+.gm-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  font-family: var(--gm-face);
+  font-weight: var(--gm-heavy);
+  font-size: 13px;
+  color: #f7f4ec;
+  box-shadow: 0 0 0 2px #f2eee4, 1px 2px 0 var(--gm-shadow);
+}
+.gm-conflict-badge .gm-mark { background: #b06e5e; }
+.gm-fits-badge    .gm-mark { background: #6f9890; }
+
+/* Tooltip: hidden until asked for, never pushes layout, never eats a click. */
+.gm-tip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  z-index: 2147483000;
+  display: block;
+  width: max-content;
+  max-width: 260px;
+  padding: 6px 9px 5px;
+  background: var(--gm-ink);
+  border-radius: 2px;
+  box-shadow: 1px 2px 0 var(--gm-shadow);
+  color: #eae6dc;
+  font-family: var(--gm-face);
+  font-size: 11px;
+  line-height: 1.45;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+.gm-marker:hover .gm-tip,
+.gm-marker:focus .gm-tip,
+.gm-marker:focus-visible .gm-tip,
+.gm-marker:focus-within .gm-tip { opacity: 1; visibility: visible; }
+
+/* ================== small inline badges ================== */
+.gm-final-badge, .gm-waitlist-badge, .gm-ge-badge, .gm-prereq-badge, .gm-prereq-list {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px 1px;
+  font-family: var(--gm-face);
+  font-size: 11px;
+  vertical-align: middle;
+  border-radius: 2px;
+  box-shadow: 1px 1px 0 var(--gm-shadow);
+}
+.gm-final-badge    { background: var(--gm-ink); color: var(--gm-accent); }
+.gm-waitlist-badge { background: var(--gm-surface); color: var(--gm-ink); }
+.gm-ge-badge       { background: var(--gm-surface); color: var(--gm-ink); }
+.gm-prereq-badge, .gm-prereq-list { background: #c9b184; color: #33291a; }
+
+.gm-waitlist-hint {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px 1px;
+  max-width: 34em;
+  background: var(--gm-surface);
+  border-left: 2px solid var(--gm-warn);
+  border-radius: 2px;
+  color: var(--gm-ink);
+  font-family: var(--gm-face);
+  font-size: 11px;
+  vertical-align: middle;
+}
+
+/* ================== seat status ================== */
+.gm-seat {
+  display: inline-block;
+  padding: 1px 6px 0;
+  border-radius: 2px;
+  font-family: var(--gm-face);
+  font-weight: 700;
+  font-size: 11px;
+}
+.gm-seat-full { background: #b06e5e; color: #f7f4ec; }
+.gm-seat-low  { background: var(--gm-warn); color: #2b2416; }
+.gm-seat-ok   { background: none; color: inherit; font-weight: 400; padding: 0; }
+
+.gm-closed-row { opacity: .68; }
+.gm-closed-row:hover { opacity: 1; }
+
+/* ================== peek widget ================== */
+/* v10 2.9 — the peek gets its own gradient, related to the popup's but more
+   blue: deep ocean at the top fading to a lighter blue-grey. */
+/* v11 Part 6 — the peek is not a flat navy box. Its own gradient, blue-forward
+   and clearly the same family as the popup, plus the same tape treatment
+   everything else gets: scanlines, grain, and the chromatic fringe on the edges
+   (the fringe comes from the shared A4 rule above). */
+.gm-peek {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2147482000;
+  width: 254px;
+  background:
+    repeating-linear-gradient(to bottom, rgba(43,61,82,.05) 0 1px, transparent 1px 2px),
+    radial-gradient(circle at 22% 28%, rgba(139,125,107,.06) 0 1px, transparent 1px),
+    radial-gradient(circle at 68% 62%, rgba(139,125,107,.06) 0 1px, transparent 1px),
+    linear-gradient(to bottom, #a8c4d4 0%, #c2d2d6 42%, #d8d6cc 100%);
+  background-size: 100% 2px, 9px 9px, 13px 13px, 100% 100%;
+  border-radius: 3px;
+  box-shadow: 2px 4px 0 var(--gm-shadow);
+  font-family: var(--gm-face);
+  color: var(--gm-ink);
+}
+.gm-peek-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 8px 5px;
+  background: var(--gm-ink);
+  border-radius: 3px 3px 0 0;
+}
+.gm-peek-title {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--gm-face);
+  font-size: 13px;
+  color: var(--gm-accent);
+}
+.gm-peek-btns { display: inline-flex; gap: 4px; }
+.gm-peek-toggle, .gm-peek-compact { width: 18px; height: 17px; padding: 0; font-size: 11px; }
+.gm-peek-body { max-height: 300px; overflow-y: auto; }
+.gm-peek-class {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  padding: 5px 9px;
+  border-bottom: 1px solid var(--gm-hair);
+}
+.gm-peek-compact-on .gm-peek-class { padding: 2px 9px; }
+.gm-peek-code { font-size: 11px; font-weight: 700; white-space: nowrap; }
+.gm-peek-when { display: flex; gap: 6px; font-size: 11px; color: var(--gm-muted); white-space: nowrap; }
+.gm-peek-days { font-weight: 700; }
+
+.gm-peek-units {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 9px 7px;
+  font-size: 11px; font-weight: 700;
+}
+.gm-peek-units .gm-units-num { font-size: 15px; }
+.gm-peek-units.gm-units-warn { color: #8a4a3c; }
+.gm-peek-caphint { padding: 0 9px 7px; font-size: 11px; line-height: 1.4; color: var(--gm-muted); }
+.gm-peek-stale {
+  display: flex; justify-content: space-between; gap: 8px;
+  padding: 5px 9px 6px;
+  background: rgba(201, 168, 120, .2);
+  border-top: 1px solid var(--gm-hair);
+  font-size: 11px; line-height: 1.4;
+  color: var(--gm-ink);
+}
+.gm-peek-stale a { color: var(--gm-ink); font-weight: 700; }
+.gm-peek-total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 9px 7px;
+  border-top: 1px solid var(--gm-hair);
+  font-size: 11px;
+}
+.gm-peek-total a { color: var(--gm-ink); }
+.gm-peek-total a:hover { text-decoration: underline; }
+.gm-peek-collapsed .gm-peek-head { border-bottom: none; }
+
+/* ================== status surface ================== */
+/* v12 1.1 — MEASURED, second cause of "the calendar button does nothing".
+   This toast is fixed at the bottom-left with the highest z-index we use, so on
+   a short page it lands on top of a course row's action cell. A real mouse click
+   aimed at the grid button then hit-tested to the toast: elementFromPoint at the
+   button's own centre returned .gm-status, and the click produced zero panels.
+   Hiding the toast and repeating the identical click produced one.
+   A toast is something to read, not something to click through — so it stops
+   taking pointer events entirely, and only its close button takes them back. */
+.gm-status {
+  position: fixed;
+  left: 16px; bottom: 16px;
+  z-index: 2147483000;
+  pointer-events: none;
+  display: flex; align-items: flex-start; gap: 8px;
+  max-width: 322px;
+  padding: 10px 34px 10px 12px;
+  background: var(--gm-base);
+  border-radius: 3px;
+  box-shadow: 2px 3px 0 var(--gm-shadow);
+  font-family: var(--gm-face);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--gm-ink);
+}
+.gm-status-text { flex: 1 1 auto; min-width: 0; }
+.gm-status-dot { flex: 0 0 auto; width: 9px; height: 9px; margin-top: 4px; background: var(--gm-clash); border-radius: 2px; }
+.gm-status-no-schedule .gm-status-dot { background: var(--gm-accent); }
+.gm-status-storage .gm-status-dot { background: var(--gm-warn); }
+.gm-status-close {
+  position: absolute; top: 6px; right: 6px;
+  width: 20px; height: 19px;
+  font-size: 11px;
+  pointer-events: auto;   /* the one part of the toast that IS clickable */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-pill, .gm-card, .gm-peek { transition: none; animation: none; }
+}
+
+/* Never cover GOLD's own controls on a normal desktop. */
+@media (max-width: 1100px) {
+  .gm-peek { width: 228px; right: 12px; bottom: 12px; }
+  .gm-peek-body { max-height: 232px; }
+}
+
+
+/* ============ v10 2.9 — the injected UI follows the popup's theme ============
+   Night: deep tape-blue into near-black with the green shift. */
+.gm-peek.gm-dark {
+  background:
+    repeating-linear-gradient(to bottom, rgba(10,16,12,.16) 0 1px, transparent 1px 2px),
+    radial-gradient(circle at 22% 28%, rgba(200,212,192,.06) 0 1px, transparent 1px),
+    radial-gradient(circle at 68% 62%, rgba(200,212,192,.06) 0 1px, transparent 1px),
+    linear-gradient(to bottom, #16242a 0%, #131e1c 55%, #0d1310 100%);
+  background-size: 100% 2px, 7px 7px, 11px 11px, 100% 100%;
+  color: #c8d4c0;
+}
+.gm-peek.gm-dark .gm-peek-head { background: #0d1a18; }
+.gm-peek.gm-dark .gm-peek-title { color: #a8c098; }
+.gm-peek.gm-dark .gm-peek-code,
+.gm-peek.gm-dark .gm-peek-total,
+.gm-peek.gm-dark .gm-peek-total a { color: #c8d4c0; }
+.gm-peek.gm-dark .gm-peek-when,
+.gm-peek.gm-dark .gm-peek-caphint { color: #8a9484; }
+.gm-peek.gm-dark .gm-peek-class,
+.gm-peek.gm-dark .gm-peek-total { border-color: rgba(200,212,192,.14); }
+.gm-peek.gm-dark .gm-peek-toggle,
+.gm-peek.gm-dark .gm-peek-compact {
+  background: #1c2620; color: #c8d4c0;
+  border-top-color: #33443a; border-left-color: #33443a;
+  border-bottom-color: #0d130f; border-right-color: #0d130f;
+}
+.gm-peek.gm-dark .gm-peek-stale { background: rgba(168,192,152,.14); }
+.gm-peek.gm-dark .gm-peek-stale a { color: #c8d4c0; }
+
+.gm-status.gm-dark {
+  background: #16221c;
+  color: #c8d4c0;
+  border-top-color: rgba(228,184,200,.28);
+  border-left-color: rgba(228,184,200,.28);
+  border-bottom-color: rgba(184,216,200,.28);
+  border-right-color: rgba(184,216,200,.28);
+}
+.gm-status.gm-dark .gm-status-close {
+  background: #1c2620; color: #c8d4c0;
+  border-top-color: #33443a; border-left-color: #33443a;
+  border-bottom-color: #0d130f; border-right-color: #0d130f;
+}
+

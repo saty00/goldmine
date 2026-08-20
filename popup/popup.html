@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+  <title>GOLDmine</title>
+</head>
+<body>
+  <!-- F6 — day mode is a still frame from the same tape as night mode.
+       Layers back to front: gradient (on body), horizon, waves, sun glare,
+       birds (#sky), then the tape treatment over everything. -->
+  <div class="seascape" aria-hidden="true">
+    <span class="sea-horizon"></span>
+    <span class="sea-wave sea-wave-1"></span>
+    <span class="sea-wave sea-wave-2"></span>
+    <span class="sea-wave sea-wave-3"></span>
+    <span class="sea-glare"></span>
+  </div>
+  <!-- v11 Part 2 — atmosphere behind the content, motion in front of it. -->
+  <div class="sky-back" id="skyBack" aria-hidden="true"></div>
+  <div class="sky-front" id="skyFront" aria-hidden="true"></div>
+  <!-- A5: tape texture over everything. Purely decorative, never interactive. -->
+  <div class="tape" aria-hidden="true"></div>
+
+  <!-- A8: the header is a washed-out sunset over water. A7: the wordmark appears
+       exactly ONCE in the whole UI and sits on top of it, like it was printed on
+       a photo of the ocean. -->
+  <header class="masthead">
+    <span class="horizon" aria-hidden="true"></span>
+    <span class="fringe-band" aria-hidden="true"></span>
+    <div class="wordmark">
+      <span class="wm-gold">GOLD</span><span class="wm-mine">mine</span><span class="wm-exe">.exe</span>
+    </div>
+    <p class="tagline">gold, but it actually helps you</p>
+    <button id="darkToggle" class="mode-toggle" type="button"
+            title="day / night" aria-label="Toggle night mode">
+      <span class="mode-dot" aria-hidden="true"></span>
+    </button>
+  </header>
+  <!-- v10 2.2 — one irregular water boundary where the header gradient meets
+       the body gradient. Replaces the row of semicircle dividers. -->
+  <div class="waterline" aria-hidden="true">
+    <span class="waterline-fill"></span>
+    <span class="waterline-pink"></span>
+    <span class="waterline-mint"></span>
+  </div>
+
+  <main class="sheet">
+
+    <!-- THE loudest element on this surface: at 7:45am this is the only number
+         that matters. Everything below it is deliberately quieter. -->
+    <section class="countdown" id="passSection" hidden>
+      <div class="countdown-kicker">next pass time</div>
+      <div class="countdown-big" id="passCountdown">--:--:--</div>
+      <div class="countdown-sub" id="passLabel">get ready, gaucho</div>
+      <div class="countdown-note">this is your registration appointment. you can add classes once it hits zero.</div>
+    </section>
+
+    <section class="panel" id="scheduleSection" hidden>
+      <div class="panel-label">your schedule</div>
+      <div id="scheduleList"></div>
+    </section>
+
+    <section class="panel" id="finalsSection" hidden>
+      <div class="panel-label">finals</div>
+      <div id="finalsWarn" class="finals-warn" hidden></div>
+      <div id="finalsList"></div>
+    </section>
+    <section class="panel" id="datesSection" hidden>
+      <div class="panel-label">coming up</div>
+      <div id="datesList"></div>
+    </section>
+
+    <section class="panel" id="geSection" hidden>
+      <div class="panel-label">still need</div>
+      <div id="geList" class="ge-chips"></div>
+      <p class="ge-note">per-course GE tags aren't always in GOLD. this is what your Progress Check still lists.</p>
+    </section>
+    <section class="panel tips" id="tipsSection">
+      <div class="panel-label">gaucho tip</div>
+      <div id="tipText" class="tip-text"></div>
+    </section>
+
+    <section class="export">
+      <button id="exportIcs" class="btn wide" type="button">drop my classes into Google Calendar</button>
+    </section>
+    <section class="controls">
+      <label class="row">
+        <span class="row-text">
+          <span class="row-title">prof ratings</span>
+          <span class="row-sub">score chips + hover cards on every prof, everywhere</span>
+        </span>
+        <input type="checkbox" id="toggleRatings" class="switch" checked />
+      </label>
+
+      <label class="row">
+        <span class="row-text">
+          <span class="row-title">schedule peek</span>
+          <span class="row-sub">your classes float in the corner while you search</span>
+        </span>
+        <input type="checkbox" id="togglePeek" class="switch" checked />
+      </label>
+
+      <label class="row">
+        <span class="row-text">
+          <span class="row-title"><span id="bellIcon" class="bell" aria-hidden="true"></span>deadline reminders</span>
+          <span class="row-sub" id="remindersSub">we'll remind you before you miss it</span>
+        </span>
+        <input type="checkbox" id="toggleReminders" class="switch" checked />
+      </label>
+
+      <label class="row">
+        <span class="row-text">
+          <span class="row-title">conflict warnings</span>
+          <span class="row-sub">flags anything that clashes with your schedule</span>
+        </span>
+        <input type="checkbox" id="toggleConflicts" class="switch" checked />
+      </label>
+    </section>
+
+    <section class="panel">
+      <div class="panel-label">your account</div>
+      <p class="muted-line">drop your @ucsb.edu to keep your stuff on this device</p>
+      <div class="login-row">
+        <input type="email" id="emailInput" class="input" placeholder="netid@ucsb.edu"
+               autocomplete="off" spellcheck="false" />
+        <button id="saveEmail" class="btn" type="button">save</button>
+      </div>
+      <div id="emailStatus" class="login-status"></div>
+    </section>
+
+    <section class="statline">
+      <span class="stat-num" id="profCount">—</span>
+      <span class="stat-label">profs cached<br /><span id="dataDate" class="stat-sub">ratings loaded on demand</span></span>
+    </section>
+
+    <section class="firstrun">
+      <strong>heads up.</strong> hit "My Schedule" once so GOLDmine can read your classes. then go to Find Courses, and the peek panel and conflict flags light up.
+    </section>
+  </main>
+  <footer>
+    <span>built by gauchos, for gauchos</span>
+    <a href="https://github.com/satyachindam/goldmine/issues/new" target="_blank" rel="noopener">report a bug</a>
+    <a href="#" id="clearCache">clear cache</a>
+  </footer>
+
+  <script src="ics.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
