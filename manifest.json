@@ -4,7 +4,7 @@
   "short_name": "GOLDmine",
   "version": "13.0.0",
   "description": "prof ratings, conflict warnings, and pass time countdown built into UCSB GOLD. your data stays on your device.",
-  "homepage_url": "https://github.com/satyachindam/goldmine",
+  "homepage_url": "https://github.com/saty00/goldmine",
   "permissions": [
     "storage",
     "alarms",
