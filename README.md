@@ -32,7 +32,7 @@ GOLDmine puts it all in one place.
 ## install
 
 ### Chrome Web Store
-*(link once published)*
+[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/goldmine-%E2%80%94-ucsb-schedule/pannjbcjgahcbfphbbahpeaabfhojfbe)
 
 ### load unpacked
 1. download or clone this repo
